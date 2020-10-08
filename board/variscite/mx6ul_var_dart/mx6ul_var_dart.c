@@ -562,8 +562,6 @@ void do_enable_parallel_lcd(struct display_info_t const *dev)
 		imx_iomux_v3_setup_multiple_pads(lcd_pads, ARRAY_SIZE(lcd_pads));
 
 		imx_iomux_v3_setup_multiple_pads(pwm_pads[board], ARRAY_SIZE(pwm_pads[board]));
-		gpio_request(IMX_GPIO_NR(4, 20), "5V_en");
-		gpio_direction_output(IMX_GPIO_NR(4, 20) , 1);
 
 #ifdef CONFIG_VIDEO_ETML0400
     etml0400_init();
@@ -869,6 +867,22 @@ int board_init(void)
 }
 
 #ifndef CONFIG_SPL_BUILD
+
+int power_init_board(void)
+{
+    gpio_request(IMX_GPIO_NR(1, 1), "3V3_aux_en");
+    gpio_direction_output(IMX_GPIO_NR(1, 1) , 1);
+
+    gpio_request(IMX_GPIO_NR(4, 20), "5V_en");
+    gpio_direction_output(IMX_GPIO_NR(4, 20) , 1);
+
+    gpio_request(IMX_GPIO_NR(4, 19), "3V3_display_en");
+    gpio_direction_output(IMX_GPIO_NR(4, 19) , 1);
+
+    return 0;
+}
+
+
 #ifdef CONFIG_CMD_BMODE
 static const struct boot_mode board_boot_modes[] = {
 	/* 4 bit bus width */
