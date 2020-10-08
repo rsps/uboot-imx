@@ -36,7 +36,8 @@
 
 #define	PS2KHZ(ps)	(1000000000UL / (ps))
 
-#define	FB_SYNC_CLK_LAT_FALL	0x40000000
+#define FB_SYNC_OE_LOW_ACT      0x80000000
+#define        FB_SYNC_CLK_LAT_FALL    0x40000000
 
 static GraphicDevice panel;
 struct mxs_dma_desc desc;
@@ -92,12 +93,21 @@ void mxs_lcd_get_panel(struct display_panel *dispanel)
 static void mxs_lcd_init(GraphicDevice *panel,
 			struct ctfb_res_modes *mode, int bpp)
 {
-	struct mxs_lcdif_regs *regs = (struct mxs_lcdif_regs *)(ulong)(panel->isaBase);
-	uint32_t word_len = 0, bus_width = 0, vdctrl0;
+#ifdef MXS_LCDIF_BASE
+        struct mxs_lcdif_regs *regs = (struct mxs_lcdif_regs *)MXS_LCDIF_BASE;
+#else
+        struct mxs_lcdif_regs *regs =
+               (struct mxs_lcdif_regs *)(ulong)panel->isaBase;
+#endif
+        uint32_t word_len = 0, bus_width = 0, vdctrl0 = 0;
 	uint8_t valid_data = 0;
 
 	/* Kick in the LCDIF clock */
+#ifdef MXS_LCDIF_BASE
+        mxs_set_lcdclk(MXS_LCDIF_BASE, PS2KHZ(mode->pixclock));
+#else	
 	mxs_set_lcdclk(panel->isaBase, PS2KHZ(mode->pixclock));
+#endif
 
 	/* Restart the LCDIF block */
 	mxs_reset_block(&regs->hw_lcdif_ctrl_reg);
@@ -148,7 +158,13 @@ static void mxs_lcd_init(GraphicDevice *panel,
 #ifndef CONFIG_IMX_SEC_MIPI_DSI
 	vdctrl0 |= LCDIF_VDCTRL0_ENABLE_POL;
 #endif
-	if (mode->sync & FB_SYNC_CLK_LAT_FALL)
+	if (mode->sync & FB_SYNC_HOR_HIGH_ACT)
+        	vdctrl0 |= LCDIF_VDCTRL0_HSYNC_POL;
+    	if (mode->sync & FB_SYNC_VERT_HIGH_ACT)
+        	vdctrl0 |= LCDIF_VDCTRL0_VSYNC_POL;
+    	if (!(mode->sync & FB_SYNC_OE_LOW_ACT))
+        	vdctrl0 |= LCDIF_VDCTRL0_ENABLE_POL;
+    	if (mode->sync & FB_SYNC_CLK_LAT_FALL)
 		vdctrl0 |= LCDIF_VDCTRL0_DOTCLK_POL;
 	writel(vdctrl0, &regs->hw_lcdif_vdctrl0);
 	writel(mode->upper_margin + mode->lower_margin +
@@ -185,7 +201,12 @@ static void mxs_lcd_init(GraphicDevice *panel,
 
 void lcdif_power_down(void)
 {
-	struct mxs_lcdif_regs *regs = (struct mxs_lcdif_regs *)(ulong)(panel.isaBase);
+#ifdef MXS_LCDIF_BASE
+       struct mxs_lcdif_regs *regs = (struct mxs_lcdif_regs *)MXS_LCDIF_BASE;
+#else
+       struct mxs_lcdif_regs *regs =
+               (struct mxs_lcdif_regs *)(ulong)(panel.isaBase);
+#endif
 	int timeout = 1000000;
 
 #ifdef CONFIG_MX6
@@ -230,7 +251,6 @@ void *video_hw_init(void)
 		}
 
 		bpp = video_get_params(&mode, penv);
-		panel.isaBase  = MXS_LCDIF_BASE;
 	} else {
 		mode.xres = fbmode.xres;
 		mode.yres = fbmode.yres;

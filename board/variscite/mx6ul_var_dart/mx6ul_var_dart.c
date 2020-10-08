@@ -33,6 +33,10 @@
 #include "../drivers/video/mxcfb.h"
 #endif
 
+#ifdef CONFIG_VIDEO_ETML0400
+#include "../drivers/video/etml0400.h"
+#endif
+
 #include "mx6var_eeprom_v2.h"
 
 DECLARE_GLOBAL_DATA_PTR;
@@ -66,6 +70,8 @@ DECLARE_GLOBAL_DATA_PTR;
 
 #define LCD_PAD_CTRL    (PAD_CTL_HYS | PAD_CTL_PUS_100K_UP | PAD_CTL_PUE | \
 	PAD_CTL_PKE | PAD_CTL_SPEED_MED | PAD_CTL_DSE_40ohm)
+
+#define IO_PAD_CTRL    (PAD_CTL_SRE_FAST | PAD_CTL_DSE_240ohm)
 
 #define GPMI_PAD_CTRL0 (PAD_CTL_PKE | PAD_CTL_PUE | PAD_CTL_PUS_100K_UP)
 #define GPMI_PAD_CTRL1 (PAD_CTL_DSE_40ohm | PAD_CTL_SPEED_MED | \
@@ -487,37 +493,57 @@ static void print_emmc_size(void)
 
 #ifdef CONFIG_VIDEO_MXS
 static iomux_v3_cfg_t const lcd_pads[] = {
-	MX6_PAD_LCD_CLK__LCDIF_CLK | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_ENABLE__LCDIF_ENABLE | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA02__LCDIF_DATA02 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA03__LCDIF_DATA03 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA04__LCDIF_DATA04 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA05__LCDIF_DATA05 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA06__LCDIF_DATA06 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA07__LCDIF_DATA07 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA10__LCDIF_DATA10 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA11__LCDIF_DATA11 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA12__LCDIF_DATA12 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA13__LCDIF_DATA13 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA14__LCDIF_DATA14 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA15__LCDIF_DATA15 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA18__LCDIF_DATA18 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA19__LCDIF_DATA19 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA20__LCDIF_DATA20 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA21__LCDIF_DATA21 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA22__LCDIF_DATA22 | MUX_PAD_CTRL(LCD_PAD_CTRL),
-	MX6_PAD_LCD_DATA23__LCDIF_DATA23 | MUX_PAD_CTRL(LCD_PAD_CTRL),
+       MX6_PAD_LCD_CLK__LCDIF_CLK | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_ENABLE__LCDIF_ENABLE | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_HSYNC__LCDIF_HSYNC | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_VSYNC__LCDIF_VSYNC | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA00__LCDIF_DATA00 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA01__LCDIF_DATA01 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA02__LCDIF_DATA02 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA03__LCDIF_DATA03 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA04__LCDIF_DATA04 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA05__LCDIF_DATA05 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA06__LCDIF_DATA06 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA07__LCDIF_DATA07 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA08__LCDIF_DATA08 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA09__LCDIF_DATA09 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA10__LCDIF_DATA10 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA11__LCDIF_DATA11 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA12__LCDIF_DATA12 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA13__LCDIF_DATA13 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA14__LCDIF_DATA14 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA15__LCDIF_DATA15 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA16__LCDIF_DATA16 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA17__LCDIF_DATA17 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA18__LCDIF_DATA18 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA19__LCDIF_DATA19 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA20__LCDIF_DATA20 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA21__LCDIF_DATA21 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA22__LCDIF_DATA22 | MUX_PAD_CTRL(IO_PAD_CTRL),
+       MX6_PAD_LCD_DATA23__LCDIF_DATA23 | MUX_PAD_CTRL(IO_PAD_CTRL),
+
 };
 
 static iomux_v3_cfg_t const pwm_pads[][1*2] = {
 	/* Use GPIO for Brightness adjustment, duty cycle = period */
 	{
 		/* DART-6UL */
-		MX6_PAD_LCD_DATA00__GPIO3_IO05 | MUX_PAD_CTRL(NO_PAD_CTRL),
+		MX6_PAD_NAND_DQS__GPIO4_IO16 | MUX_PAD_CTRL(IO_PAD_CTRL),
+                MX6_PAD_CSI_HSYNC__GPIO4_IO20 | MUX_PAD_CTRL(IO_PAD_CTRL),
+                MX6_PAD_JTAG_TDO__GPIO1_IO12 | MUX_PAD_CTRL(IO_PAD_CTRL),
+                MX6_PAD_JTAG_TDI__GPIO1_IO13 | MUX_PAD_CTRL(IO_PAD_CTRL),
+                MX6_PAD_JTAG_TCK__GPIO1_IO14 | MUX_PAD_CTRL(IO_PAD_CTRL),
+                MX6_PAD_ENET1_TX_DATA1__GPIO2_IO04 | MUX_PAD_CTRL(IO_PAD_CTRL),
 	},
 	{
 		/* VAR-SOM-6UL */
-		MX6_PAD_GPIO1_IO05__GPIO1_IO05 | MUX_PAD_CTRL(NO_PAD_CTRL),
+		MX6_PAD_NAND_DQS__GPIO4_IO16 | MUX_PAD_CTRL(IO_PAD_CTRL),
+                MX6_PAD_CSI_HSYNC__GPIO4_IO20 | MUX_PAD_CTRL(IO_PAD_CTRL),
+                MX6_PAD_JTAG_TDO__GPIO1_IO12 | MUX_PAD_CTRL(IO_PAD_CTRL),
+                MX6_PAD_JTAG_TDI__GPIO1_IO13 | MUX_PAD_CTRL(IO_PAD_CTRL),
+                MX6_PAD_JTAG_TCK__GPIO1_IO14 | MUX_PAD_CTRL(IO_PAD_CTRL),
+                MX6_PAD_JTAG_TRST_B__GPIO1_IO15 | MUX_PAD_CTRL(IO_PAD_CTRL),
+                MX6_PAD_ENET1_TX_DATA1__GPIO2_IO04 | MUX_PAD_CTRL(IO_PAD_CTRL),
 	},
 };
 
@@ -533,15 +559,21 @@ void do_enable_parallel_lcd(struct display_info_t const *dev)
 	if (!is_cpu_type(MXC_CPU_MX6ULZ)) {
 		int board = get_board_indx();
 
-		enable_lcdif_clock(dev->bus, 1);
-
 		imx_iomux_v3_setup_multiple_pads(lcd_pads, ARRAY_SIZE(lcd_pads));
 
 		imx_iomux_v3_setup_multiple_pads(pwm_pads[board], ARRAY_SIZE(pwm_pads[board]));
+		gpio_request(IMX_GPIO_NR(4, 20), "5V_en");
+		gpio_direction_output(IMX_GPIO_NR(4, 20) , 1);
+
+#ifdef CONFIG_VIDEO_ETML0400
+    etml0400_init();
+#endif
+
+		enable_lcdif_clock(dev->bus, 1);
 
 		/* Set Brightness to high */
-		gpio_request(backlight_gpio[board], "backlight");
-		gpio_direction_output(backlight_gpio[board], 1);
+		gpio_request(IMX_GPIO_NR(4, 16), "backlight");
+		gpio_direction_output(IMX_GPIO_NR(4, 16) , 1);
 	}
 }
 
@@ -554,17 +586,17 @@ struct display_info_t const displays[] = {{
 	.detect = NULL,
 	.enable	= do_enable_parallel_lcd,
 	.mode	= {
-		.name           = "VAR-WVGA-LCD",
-		.xres           = 800,
-		.yres           = 480,
-		.pixclock       = MHZ2PS(30),
-		.left_margin    = 40,
-		.right_margin   = 40,
-		.upper_margin   = 29,
-		.lower_margin   = 13,
-		.hsync_len      = 48,
-		.vsync_len      = 3,
-		.sync           = FB_SYNC_CLK_LAT_FALL,
+		.name           = "ETML0400",
+                .xres           = 480,
+                .yres           = 800,
+                .pixclock       = MHZ2PS(23),
+                .left_margin    = 1,
+                .right_margin   = 99,
+                .upper_margin   = 15,
+                .lower_margin   = 20,
+                .hsync_len      = 4,
+                .vsync_len      = 5,
+                .sync           = FB_SYNC_OE_LOW_ACT,
 		.vmode          = FB_VMODE_NONINTERLACED
 } } };
 size_t display_count = ARRAY_SIZE(displays);

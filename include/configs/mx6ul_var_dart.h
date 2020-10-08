@@ -80,7 +80,7 @@
 	"mmcrootpart=2\0" \
 	"mmcargs=setenv bootargs console=${console},${baudrate} " \
 		"root=/dev/mmcblk${mmcblk}p${mmcrootpart} rootwait rw " \
-		"${cma_size}\0" \
+		"${cma_size} consoleblank=0\0" \
 	"loadbootenv=" \
 		"load mmc ${mmcdev}:${mmcbootpart} ${loadaddr} ${bootdir}/${bootenv}\0" \
 	"importbootenv=echo Importing bootenv from mmc ...; " \
@@ -153,7 +153,7 @@
 	"fdt_addr=0x83000000\0" \
 	"fdt_high=0xffffffff\0" \
 	"initrd_high=0xffffffff\0" \
-	"panel=VAR-WVGA-LCD\0" \
+	"panel=ETML0400\0" \
 	"splashsourceauto=yes\0" \
 	"splashfile=/boot/splash.bmp\0" \
 	"splashimage=0x83100000\0" \

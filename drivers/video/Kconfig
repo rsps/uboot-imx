@@ -724,4 +724,15 @@ config VIDEO_DT_SIMPLEFB
 	  The video output is initialized by U-Boot, and kept by the
 	  kernel.
 
+config VIDEO_ETML0400
+    bool "ETML0400 display driver"
+    depends on TARGET_MX6UL_VAR_DART
+    
+    default n
+    ---help---
+    Support for the ETML0400 bridge chip, which can take pixel data coming
+    from a parallel RGB interface and translate it on the fly into parallel LCD
+    interface for driving a LCD panel. It uses GPIO to set configuration parameters.
+
+
 endmenu
