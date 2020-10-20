@@ -191,6 +191,7 @@
 		"fi;\0" \
 	"usbnet_devaddr=f8:dc:7a:00:00:02\0" \
 	"usbnet_hostaddr=f8:dc:7a:00:00:01\0" \
+	"anders_flerp=derp\0" \
 	"ramsize_check="\
 		"if test $sdram_size -lt 256; then " \
 			"setenv cma_size cma=32MB; " \
