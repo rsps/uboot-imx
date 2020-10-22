@@ -879,8 +879,6 @@ int power_init_board(void)
     gpio_request(IMX_GPIO_NR(4, 19), "3V3_display_en");
     gpio_direction_output(IMX_GPIO_NR(4, 19) , 1);
 
-    fprint("RSP Power board init");	
-
     return 0;
 }
 
